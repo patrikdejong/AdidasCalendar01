@@ -1,21 +1,36 @@
+import java.util.ArrayList;
+
 import de.bezier.data.*;
-import processing.core.PApplet;
+import processing.core.*;
+import processing.data.StringList;
 
 
 public class XlsData {
 	
 
 	private PApplet p;
-	private int rows;
-	private int collums;
+	private int rows    	= 0;
+	private int cells	 	= 0;
 	private XlsReader reader;
+	StringList channels;
+// channel index von bis
+	// campaign row
+	// channel rows
+	// prios
+	
 
 	public XlsData(PApplet p) {
 		this.p = p;
 		
 		reader = new XlsReader(p, "calendarData01.xls");
 		
+		getDocLength();
+		
 		reader.firstRow();  
+		reader.firstCell();
+		reader.nextCell();
+		reader.nextCell();
+		reader.nextCell();
 		reader.nextRow();
 		reader.nextRow();
 		reader.nextRow();
@@ -31,6 +46,27 @@ public class XlsData {
 		
 	}
 	
+private void buildChannelDescription(){
+	
+	
+}	
+	
+private void getDocLength()	{
+	
+	while(reader.hasMoreRows()){
+		rows++;
+		reader.nextRow();
+	}
+	
+	
+	while(reader.hasMoreCells()){
+		cells++;
+		reader.nextCell();
+	}
+	
+	p.print("rows : "+  rows + " -- cells : "  + cells);
+}	
+	
 private void createDataStructure(){
 	
 	
@@ -44,10 +80,10 @@ public int getRows(){
 }
 
 
-public int getCollums(){
+public int getCells(){
 	
 	
-	return collums;
+	return cells;
 }
 	
 	
