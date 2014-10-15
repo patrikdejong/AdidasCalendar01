@@ -1,17 +1,10 @@
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import de.bezier.data.*;
 import processing.core.*;
-import processing.data.JSONObject;
-import processing.data.StringList;
-import processing.data.Table;
-import processing.data.TableRow;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class XlsData {
 	
@@ -30,6 +23,9 @@ public class XlsData {
 	int[] yearAr 		={31,28,31,30,31,30,31,30,31,30,31,30};
 	int[] leapYearAr 	={31,29,31,30,31,30,31,30,31,30,31,30};
 	String[] nextLeapYears 	={"2016","2020", "2024","2028"	};
+	
+	
+	public ArrayList<Campaign>  allCampaigns  = new ArrayList<Campaign>();
 
 	public XlsData(PApplet p) {
 		this.p = p;
@@ -46,10 +42,10 @@ public class XlsData {
 		
 
 	
-		p.println(  convertDateToDay("30.12") ) ;
+		//p.println(  convertDateToDay(" 01.5 ") ) ;
 		
 		
-		
+		buildCampaignData();
 			
 		//	cells.append(reader.getString());
 			
@@ -66,10 +62,64 @@ public class XlsData {
 		
 	}
 	
-private void buildChannelDescription(){
+
+private void buildCampaignData(){
 	
 	
-}	
+	
+	
+	
+	
+	for (int i = 4; i < cells.length; i++) {
+		
+		Campaign campaign = new Campaign();
+
+		
+		for (int j = 3; j < cells[i].length;j++) {
+			
+			CampaignActivity activity = new CampaignActivity();
+
+			
+
+			if( cells[i][j].length() > 1 ) {
+				
+				activity.channel  = cells[2][j];  // fill all fields when parsing
+						
+				activity.campaign = cells[i][1];
+				
+				activity.category = cells[i][0];
+				
+				if(cells[i][j].indexOf("-") > 0 && j >= 3  && cells[i][j].length() > 0){
+					activity.dateString = cells[i][j];
+					String[] dates 	  = p.split(activity.dateString, "-") ;
+									
+					
+					activity.startDay =  this.convertDateToDay(dates[0]) ;
+					activity.endDay   =  this.convertDateToDay(dates[1]) ;
+					
+	
+				}
+				
+				
+				
+			
+				
+				campaign.activities.add(activity);
+			}
+			
+			
+			
+			
+			}
+		
+		allCampaigns.add(campaign);
+		
+	}
+	
+	
+	
+	
+}
 	
 private void getDocLength()	{
 	
@@ -112,10 +162,10 @@ private int convertDateToDay(String date){
 
 	String[] dateList = p.split(date, ".") ;
 	
-	int monthDay = Integer.parseInt(dateList[1]);
+	int monthDay = Integer.parseInt(dateList[1].replaceAll("\\s+","") );
 	int curDay 	 = 0;
 	
-	int[] curYear = ( checkForLeapYear(year) ) ? leapYearAr : yearAr;    					// ---------------------> current  Year und Season zentral festlegen, im excel file
+	int[] curYear = ( checkForLeapYear(year) ) ? leapYearAr : yearAr;    					
 		
 	for (int i = 0; i < monthDay-1; i++) {
 		
@@ -123,8 +173,8 @@ private int convertDateToDay(String date){
 		
 	}
 	
-	curDay += Integer.parseInt(dateList[0]); 
-	
+	curDay += Integer.parseInt(dateList[0].replaceAll("\\s+","")); 
+	//if(semester.indexOf("FW")>-1 ) curDay -= ( checkForLeapYear(year) ) ? 366/2 : 356/2;
 	return curDay;
 }
 
