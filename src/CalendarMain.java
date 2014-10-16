@@ -22,6 +22,15 @@ public class CalendarMain extends PApplet{
 		    //reader = new XlsReader(this, "calendarData01.xls");
 		    
 		    dataSheet = new XlsData(this);
+		    
+		    
+		    // derzeit geht data von 0-2 die ersten 3 campaigns
+		    //
+		println(   dataSheet.data.get(1).activities.get(7).campaign ) ;
+		println(   dataSheet.data.get(1).activities.size() ) ;
+		println(   dataSheet.data.get(2).activities.size() ) ;
+		    
+		    
 		  }
 
 		  public void draw() {

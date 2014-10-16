@@ -25,7 +25,9 @@ public class XlsData {
 	String[] nextLeapYears 	={"2016","2020", "2024","2028"	};
 	
 	
-	public ArrayList<Campaign>  allCampaigns  = new ArrayList<Campaign>();
+	public ArrayList<Campaign>  data  = new ArrayList<Campaign>();
+	
+	
 
 	public XlsData(PApplet p) {
 		this.p = p;
@@ -83,13 +85,13 @@ private void buildCampaignData(){
 
 			if( cells[i][j].length() > 1 ) {
 				
-				activity.channel  = cells[2][j];  // fill all fields when parsing
+				activity.channel  = cells[2][j];  // -----------   > fill all fields when parsing
 						
 				activity.campaign = cells[i][1];
 				
 				activity.category = cells[i][0];
 				
-				if(cells[i][j].indexOf("-") > 0 && j >= 3  && cells[i][j].length() > 0){
+				if(cells[i][j].indexOf("-") > 0 && j >= 3  && cells[i][j].length() > 0){  // von bis date
 					activity.dateString = cells[i][j];
 					String[] dates 	  = p.split(activity.dateString, "-") ;
 									
@@ -98,11 +100,16 @@ private void buildCampaignData(){
 					activity.endDay   =  this.convertDateToDay(dates[1]) ;
 					
 	
+				}else if(cells[i][j].length() > 2  &&  j >= 3){ // single day
+				
+					activity.dateString = cells[i][j];
+					
+				
+					
+					activity.startDay =  this.convertDateToDay(cells[i][j]) ;
+					activity.endDay   =  this.convertDateToDay(cells[i][j]) + 1 ;
+				
 				}
-				
-				
-				
-			
 				
 				campaign.activities.add(activity);
 			}
@@ -112,11 +119,12 @@ private void buildCampaignData(){
 			
 			}
 		
-		allCampaigns.add(campaign);
+		data.add(campaign);
 		
 	}
 	
-	
+	//p.println( data.get(4).activities.get(20).channel );
+	//p.println( data.get(1).activities.get(30).startDay );
 	
 	
 }
@@ -187,6 +195,8 @@ private void createDataStructure(){
 	
 	season =  reader.getString();
 	
+	String lastString = "";
+	
 	while(reader.hasMoreRows()){
 
 		nrows++;
@@ -194,6 +204,16 @@ private void createDataStructure(){
 		while(reader.hasMoreCells()){
 			
 			cells[nrows-1][reader.getCellNum()] = reader.getString();
+			
+			
+			
+			if(nrows == 4){
+				
+				if (reader.getString().length() > 0) lastString = reader.getString();
+//				p.println(reader.getString());
+				cells[nrows-1][reader.getCellNum()] = lastString;
+			//	p.println(lastString);
+			}
 
 			reader.nextCell();
 			
