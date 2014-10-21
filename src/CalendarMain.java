@@ -25,10 +25,16 @@ public class CalendarMain extends PApplet{
 		    
 		    
 		    // derzeit geht data von 0-2 die ersten 3 campaigns
+		    
+		    
+		    
 		    //
 		println(   dataSheet.data.get(1).activities.get(7).campaign ) ;
 		println(   dataSheet.data.get(1).activities.size() ) ;
 		println(   dataSheet.data.get(2).activities.size() ) ;
+		
+		
+		println( "for T: " + dataSheet.data.get(1).activities.get(9).endDay ) ;
 		    
 		    
 		  }
