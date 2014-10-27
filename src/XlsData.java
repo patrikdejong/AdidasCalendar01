@@ -19,6 +19,9 @@ public class XlsData {
 	String[][] cells;
 	
 	String season;
+	String[] seasonList;
+	String year;
+	String semester;
 	
 	int[] yearAr 		={31,28,31,30,31,30,31,30,31,30,31,30};
 	int[] leapYearAr 	={31,29,31,30,31,30,31,30,31,30,31,30};
@@ -26,6 +29,7 @@ public class XlsData {
 	
 	
 	public ArrayList<Campaign>  data  = new ArrayList<Campaign>();
+	private int totalDaysOfYear;
 	
 	
 
@@ -41,25 +45,9 @@ public class XlsData {
 		cells = new String[rows][cols];
 		
 		createDataStructure();
-		
-
-	
-		//p.println(  convertDateToDay(" 01.5 ") ) ;
-		
+			
 		
 		buildCampaignData();
-			
-		//	cells.append(reader.getString());
-			
-			
-		
-		
-		
-		
-		// store in Array
-		
-		
-		
 
 		
 	}
@@ -91,6 +79,8 @@ private void buildCampaignData(){
 				
 				activity.category = cells[i][0];
 				
+				p.println(activity.category);
+				
 				if(cells[i][j].indexOf("-") > 0 && j >= 3  && cells[i][j].length() > 0){  // von bis date
 					activity.dateString = cells[i][j];
 					String[] dates 	  = p.split(activity.dateString, "-") ;
@@ -108,10 +98,14 @@ private void buildCampaignData(){
 					
 					activity.startDay =  this.convertDateToDay(cells[i][j]) ;
 					activity.endDay   =  this.convertDateToDay(cells[i][j]) + 1 ;
+					
+					
+					
 				
 				}
 				
 				campaign.activities.add(activity);
+				
 			}
 			
 			
@@ -123,8 +117,13 @@ private void buildCampaignData(){
 		
 	}
 	
+<<<<<<< Updated upstream
 	//p.println( data.get(4).activities.get(20).channel );
 	//p.println( data.get(1).activities.get(30).startDay );
+=======
+	p.println("-> data "  + data.get(5) );
+	//p.println( data.get(0).activities.get(20).endDay );
+>>>>>>> Stashed changes
 	
 	
 }
@@ -148,9 +147,19 @@ private void getDocLength()	{
 
 
 	
-	p.println("rows : " + rows + " ||||Ê cols : " + cols);
+	//p.println("rows : " + rows + " ||||Ê cols : " + cols);
 	
 }	
+
+
+public int getSemesterDays(){
+	
+	int n =  checkForLeapYear(year) ? 365/2 : 364/2;
+	
+	
+	return n;
+	
+}
 	
 private boolean checkForLeapYear(String yy){
 
@@ -164,9 +173,10 @@ private boolean checkForLeapYear(String yy){
 
 private int convertDateToDay(String date){
 	
-	String[] seasonList = p.split(season, " ") ;
-	String year 	= seasonList[2];
-	String semester = seasonList[1]; 
+	 seasonList = p.split(season, " ") ;
+	 year 		= seasonList[2];
+	 semester 	= seasonList[1]; 
+	 totalDaysOfYear = ( checkForLeapYear(year) ) ? 364 : 365;
 
 	String[] dateList = p.split(date, ".") ;
 	
@@ -182,7 +192,7 @@ private int convertDateToDay(String date){
 	}
 	
 	curDay += Integer.parseInt(dateList[0].replaceAll("\\s+","")); 
-	//if(semester.indexOf("FW")>-1 ) curDay -= ( checkForLeapYear(year) ) ? 366/2 : 356/2;
+	if(semester.indexOf("FW")>-1 ) curDay -= totalDaysOfYear/2;
 	return curDay;
 }
 
@@ -212,7 +222,7 @@ private void createDataStructure(){
 				if (reader.getString().length() > 0) lastString = reader.getString();
 //				p.println(reader.getString());
 				cells[nrows-1][reader.getCellNum()] = lastString;
-			//	p.println(lastString);
+				
 			}
 
 			reader.nextCell();

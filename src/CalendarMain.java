@@ -1,3 +1,5 @@
+import java.awt.Point;
+
 import processing.core.*;
 import de.bezier.data.*; 
 
@@ -11,39 +13,66 @@ public class CalendarMain extends PApplet{
 	}
 
 	private XlsReader reader;
-	private XlsData dataSheet;
+	private XlsData xlsData;
+	private float cy;
+	private float cx;
+	private Grid grid;
 	
 	 public void setup() {
-		    size(1200,300);
-		    background(0);
+		    size(1400,1000);
+		    
+		    smooth();
 		    
 		    
-		   // reader = new XlsReader(this, "workbook.xls");
-		    //reader = new XlsReader(this, "calendarData01.xls");
+			cx = width/2;
+			cy = height/2;  //center
+	
+		    xlsData = new XlsData(this);
+
+//		println(   xlsData.data.get(1).activities.get(7).startDay ) ;	
+//		println( "for T: " + dataSheet.data.get(1).activities.get(9).endDay ) ;
 		    
-		    dataSheet = new XlsData(this);
+<<<<<<< Updated upstream
 		    
-		    
-		    // derzeit geht data von 0-2 die ersten 3 campaigns
-		    
-		    
-		    
-		    //
-		println(   dataSheet.data.get(1).activities.get(7).campaign ) ;
-		println(   dataSheet.data.get(1).activities.size() ) ;
-		println(   dataSheet.data.get(2).activities.size() ) ;
+		println( "Semester Days: " + xlsData.getSemesterDays() ) ;
 		
+			grid = new Grid(xlsData,this);
+
 		
-		println( "for T: " + dataSheet.data.get(1).activities.get(9).endDay ) ;
+=======
+		//  println( dataSheet.data.get(4).activities.size() );
+>>>>>>> Stashed changes
 		    
 		    
 		  }
 
-		  public void draw() {
-		    stroke(255);
-		    if (mousePressed) {
-		      line(mouseX,mouseY,pmouseX,pmouseY);
-		    }
+		  public void draw() { // wird in jedem Frame aufgerufen, brauchen wir nur für zoom etc... 
+			  background(100);
+			  grid.drawGrid();
+			  
+			  println("draw");
+			  
 		  }
+		  
+		  
+		  
+		  
+		  PVector coords(double angle, float radius){
+			  
+			  
+			  double radian = (angle/180f) * Math.PI;
+			  
+
+			  double x = cx +  Math.cos(radian)*radius;
+			  double y = cy +  Math.sin(radian)*radius;
+			  
+			  PVector c = new PVector();
+			  c.x =(float) x;
+			  c.y =(float) y;
+			  
+			  return new PVector();
+			  
+		  }
+		  
 
 }
